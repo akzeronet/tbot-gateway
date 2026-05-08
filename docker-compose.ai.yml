@@ -1,0 +1,110 @@
+# TBot AI Infrastructure — Self-Hosted Stack
+# Qdrant (Vector DB) + Ollama (LLM + Embeddings) + ClickHouse (Analytics)
+#
+# Uso:
+#   docker compose -f docker-compose.ai.yml up -d
+#   docker compose -f docker-compose.ai.yml exec ollama ollama pull nomic-embed-text
+#   docker compose -f docker-compose.ai.yml exec ollama ollama pull llama3.1:8b
+#   docker compose -f docker-compose.ai.yml exec ollama ollama pull llama3.3:70b-instruct-q4_K_M
+#
+# Requisitos:
+#   - Docker + Docker Compose v2
+#   - NVIDIA GPU con drivers + nvidia-container-toolkit (para Ollama)
+#   - Mínimo 24GB VRAM para 8B, 80GB para 70B cuantizado
+
+services:
+  # ── Vector Database (Memoria semántica L2) ──────────────────────────────────
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: tbot-qdrant
+    ports:
+      - "6333:6333"   # REST API
+      - "6334:6334"   # gRPC
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
+      - QDRANT__STORAGE__ON_DISK_PAYLOAD=true
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── LLM Server (Chat + Embeddings) ─────────────────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    container_name: tbot-ollama
+    ports:
+      - "11434:11434"  # OpenAI-compatible API
+    volumes:
+      - ollama_models:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      - OLLAMA_NUM_PARALLEL=4        # Requests paralelos
+      - OLLAMA_MAX_LOADED_MODELS=3   # Modelos en VRAM simultáneos
+      - OLLAMA_KEEP_ALIVE=10m        # Mantener modelo en VRAM 10 min
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── ClickHouse (Memoria warm L3, 30-180 días) ──────────────────────────────
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: tbot-clickhouse
+    ports:
+      - "8123:8123"    # HTTP API
+      - "9000:9000"    # Native TCP
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - clickhouse_logs:/var/log/clickhouse-server
+    environment:
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8123/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── Redis (Ultra-Hot Cache L0) ───────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: tbot-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 2gb --maxmemory-policy allkeys-lru
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  qdrant_data:
+    driver: local
+  ollama_models:
+    driver: local
+  clickhouse_data:
+    driver: local
+  clickhouse_logs:
+    driver: local
+  redis_data:
+    driver: local

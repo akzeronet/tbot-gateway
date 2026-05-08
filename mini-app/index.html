@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>TBot — Dashboard</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: var(--tg-theme-bg-color, #0f172a);
+            --surface: var(--tg-theme-secondary-bg-color, #1e293b);
+            --text: var(--tg-theme-text-color, #f1f5f9);
+            --hint: var(--tg-theme-hint-color, #94a3b8);
+            --link: var(--tg-theme-link-color, #818cf8);
+            --btn: var(--tg-theme-button-color, #6366f1);
+            --btn-text: var(--tg-theme-button-text-color, #fff);
+            --accent: #6366f1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 16px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0 16px 100px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Header ── */
+        .twa-header {
+            text-align: center;
+            padding: 24px 0 16px;
+        }
+        .twa-avatar {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 12px;
+            box-shadow: 0 4px 20px rgba(99,102,241,.35);
+        }
+        .twa-name { font-size: 20px; font-weight: 700; }
+        .twa-plan {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .twa-plan.free     { background: #334155; color: #94a3b8; }
+        .twa-plan.standard { background: #312e81; color: #818cf8; }
+        .twa-plan.premium  { background: #4c1d95; color: #c4b5fd; }
+
+        /* ── KPI Cards ── */
+        .twa-kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
+        .twa-kpi {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 16px 12px;
+            text-align: center;
+        }
+        .twa-kpi-icon { font-size: 24px; margin-bottom: 6px; }
+        .twa-kpi-value { font-size: 22px; font-weight: 700; line-height: 1; }
+        .twa-kpi-label { font-size: 11px; color: var(--hint); margin-top: 4px; font-weight: 500; }
+
+        /* ── Sections ── */
+        .twa-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .twa-section-title {
+            font-size: 14px; font-weight: 700;
+            margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* ── Streak Bar ── */
+        .twa-streak-bar {
+            height: 8px;
+            background: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .twa-streak-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+        .twa-streak-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px; color: var(--hint);
+            margin-top: 6px;
+        }
+
+        /* ── Quick Actions ── */
+        .twa-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .twa-action-btn {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 6px;
+            padding: 16px 10px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: none;
+            color: var(--text);
+            font-size: 12px; font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .twa-action-btn:active { transform: scale(0.96); }
+        .twa-action-btn .icon { font-size: 24px; }
+
+        /* ── Leaderboard ── */
+        .twa-lb-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+        .twa-lb-row:last-child { border: none; }
+        .twa-lb-rank { width: 28px; text-align: center; font-weight: 700; color: var(--hint); }
+        .twa-lb-name { flex: 1; font-size: 13px; font-weight: 500; }
+        .twa-lb-value { font-weight: 700; color: var(--accent); }
+
+        /* ── Loading ── */
+        .twa-loading {
+            display: flex; align-items: center; justify-content: center;
+            min-height: 60vh;
+            flex-direction: column; gap: 16px;
+        }
+        .twa-spinner {
+            width: 36px; height: 36px;
+            border: 3px solid rgba(99,102,241,.2);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Tabs ── */
+        .twa-tabs {
+            display: flex; gap: 4px;
+            background: rgba(255,255,255,.05);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 14px;
+        }
+        .twa-tab {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            border-radius: 10px;
+            font-size: 12px; font-weight: 600;
+            cursor: pointer;
+            color: var(--hint);
+            transition: all 0.2s;
+            border: none;
+            background: none;
+        }
+        .twa-tab.active {
+            background: var(--accent);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="twa-loading" id="loading">
+            <div class="twa-spinner"></div>
+            <span style="color:var(--hint);font-size:13px">Conectando...</span>
+        </div>
+    </div>
+
+    <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+
+    // ── Colores del tema de Telegram ──
+    document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#0f172a');
+    document.documentElement.style.setProperty('--tg-theme-secondary-bg-color', tg.themeParams.secondary_bg_color || '#1e293b');
+
+    // ── Validar initData y cargar datos del usuario ──
+    const API_BASE = window.location.origin + '/wp-json/tbot/v1';
+
+    async function init() {
+        try {
+            const res = await fetch(API_BASE + '/mini-app/init', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ initData: tg.initData }),
+            });
+
+            if (!res.ok) throw new Error('Auth failed');
+            const data = await res.json();
+            if (!data.success) throw new Error(data.error || 'Error');
+
+            renderDashboard(data.data);
+        } catch (err) {
+            document.getElementById('app').innerHTML = `
+                <div class="twa-loading">
+                    <span style="font-size:48px">⚠️</span>
+                    <span style="color:var(--hint)">${err.message}</span>
+                </div>`;
+        }
+    }
+
+    function renderDashboard(d) {
+        const medals = ['🥇','🥈','🥉'];
+        const streakPct = Math.min(100, (d.streak_days / 30) * 100);
+        const streakColor = d.streak_days >= 7 ? '#10b981' : d.streak_days >= 3 ? '#f59e0b' : '#6366f1';
+
+        document.getElementById('app').innerHTML = `
+            <div class="twa-header">
+                <div class="twa-avatar">${d.name.charAt(0).toUpperCase()}</div>
+                <div class="twa-name">${d.name}</div>
+                <span class="twa-plan ${d.plan}">${d.plan.toUpperCase()}</span>
+            </div>
+
+            <div class="twa-kpis">
+                <div class="twa-kpi">
+                    <div class="twa-kpi-icon">💳</div>
+                    <div class="twa-kpi-value">${d.credits}</div>
+                    <div class="twa-kpi-label">Créditos</div>
+                </div>
+                <div class="twa-kpi">
+                    <div class="twa-kpi-icon">🔥</div>
+                    <div class="twa-kpi-value">${d.streak_days}</div>
+                    <div class="twa-kpi-label">Racha</div>
+                </div>
+                <div class="twa-kpi">
+                    <div class="twa-kpi-icon">👥</div>
+                    <div class="twa-kpi-value">${d.referral_count}</div>
+                    <div class="twa-kpi-label">Referidos</div>
+                </div>
+            </div>
+
+            <div class="twa-section">
+                <div class="twa-section-title">🔥 Progreso de Racha</div>
+                <div style="font-size:13px;color:var(--hint)">
+                    ${d.streak_days} días consecutivos — ${d.streak_days >= 30 ? '¡Meta cumplida! 🎉' : `Faltan ${30 - d.streak_days} para el hito de 30 días`}
+                </div>
+                <div class="twa-streak-bar">
+                    <div class="twa-streak-fill" style="width:${streakPct}%;background:${streakColor}"></div>
+                </div>
+                <div class="twa-streak-info">
+                    <span>0 días</span>
+                    <span>30 días 🏆</span>
+                </div>
+            </div>
+
+            <div class="twa-actions">
+                <button class="twa-action-btn" onclick="tg.openTelegramLink('https://t.me/${d.bot_username}?start=topup')">
+                    <span class="icon">💎</span> Comprar Créditos
+                </button>
+                <button class="twa-action-btn" onclick="shareRefLink()">
+                    <span class="icon">🔗</span> Invitar Amigos
+                </button>
+                <button class="twa-action-btn" onclick="tg.openTelegramLink('https://t.me/${d.bot_username}?start=ranking')">
+                    <span class="icon">🏆</span> Rankings
+                </button>
+                <button class="twa-action-btn" onclick="tg.openTelegramLink('https://t.me/${d.bot_username}?start=settings')">
+                    <span class="icon">⚙️</span> Ajustes
+                </button>
+            </div>
+
+            <div class="twa-section" style="margin-top:12px">
+                <div class="twa-section-title">🏆 Top Rachas</div>
+                <div class="twa-tabs">
+                    <button class="twa-tab active" onclick="switchTab(this,'streak')">🔥 Rachas</button>
+                    <button class="twa-tab" onclick="switchTab(this,'referral')">🤝 Referidos</button>
+                </div>
+                <div id="lb-content">
+                    ${renderLeaderboard(d.leaderboard || [], 'streak_days')}
+                </div>
+            </div>
+
+            <div class="twa-section">
+                <div class="twa-section-title">🔗 Tu Link de Referido</div>
+                <div style="background:rgba(99,102,241,.15);padding:10px 14px;border-radius:10px;font-size:12px;word-break:break-all;color:var(--link)">
+                    ${d.referral_link}
+                </div>
+                <div style="font-size:12px;color:var(--hint);margin-top:8px">
+                    +200 créditos por cada persona que se una 🎁
+                </div>
+            </div>
+        `;
+    }
+
+    function renderLeaderboard(rows, field) {
+        const medals = ['🥇','🥈','🥉'];
+        if (!rows.length) return '<div style="text-align:center;color:var(--hint);padding:20px;font-size:13px">Aún no hay datos</div>';
+        return rows.map((r, i) => `
+            <div class="twa-lb-row">
+                <div class="twa-lb-rank">${medals[i] || (i+1)+'.'}</div>
+                <div class="twa-lb-name">${r.name || 'Anónimo'}</div>
+                <div class="twa-lb-value">${r[field] || 0}</div>
+            </div>
+        `).join('');
+    }
+
+    function switchTab(el, type) {
+        document.querySelectorAll('.twa-tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        fetch(API_BASE + '/mini-app/leaderboard?type=' + type, {
+            headers: { 'X-TBot-InitData': tg.initData },
+        }).then(r => r.json()).then(d => {
+            const field = type === 'streak' ? 'streak_days' : 'referral_count';
+            document.getElementById('lb-content').innerHTML = renderLeaderboard(d.data || [], field);
+        });
+    }
+
+    function shareRefLink() {
+        const link = document.querySelector('.twa-section:last-child div[style*="referral"]')?.textContent?.trim();
+        if (link) {
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('¡Únete conmigo en este asistente IA! 🤖')}`);
+        }
+    }
+
+    // ── Boot ──
+    init();
+    </script>
+</body>
+</html>

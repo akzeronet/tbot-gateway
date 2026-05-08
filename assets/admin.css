@@ -1,0 +1,428 @@
+/* =============================================================================
+   TBot Gateway — Enterprise Admin UI (Light Theme)
+   ============================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --tbot-bg:          #f8fafc;
+    --tbot-surface:     #ffffff;
+    --tbot-surface-2:   #f1f5f9;
+    --tbot-border:      #e2e8f0;
+    --tbot-border-2:    #cbd5e1;
+    --tbot-accent:      #3b82f6;
+    --tbot-accent-light:#eff6ff;
+    --tbot-accent-2:    #8b5cf6;
+    --tbot-success:     #10b981;
+    --tbot-success-bg:  #f0fdf4;
+    --tbot-warning:     #f59e0b;
+    --tbot-warning-bg:  #fffbeb;
+    --tbot-danger:      #ef4444;
+    --tbot-danger-bg:   #fef2f2;
+    --tbot-text:        #0f172a;
+    --tbot-text-2:      #334155;
+    --tbot-muted:       #64748b;
+    --tbot-muted-light: #94a3b8;
+    --tbot-radius:      10px;
+    --tbot-radius-lg:   14px;
+    --tbot-shadow:      0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+    --tbot-shadow-md:   0 4px 12px rgba(0,0,0,0.1), 0 8px 24px rgba(0,0,0,0.06);
+    --tbot-transition:  all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── BODY / WRAP ─────────────────────────────────────────────────────────── */
+#wpbody          { background: var(--tbot-bg) !important; }
+#wpbody-content  { padding-top: 0; background: var(--tbot-bg); }
+
+.tbot-wrap {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    max-width: 1380px;
+    padding: 0 0 60px;
+    color: var(--tbot-text);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ── HEADER ──────────────────────────────────────────────────────────────── */
+.tbot-header {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #6366f1 100%);
+    padding: 22px 28px;
+    margin: -8px -20px 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(59,130,246,0.25);
+}
+.tbot-header::after {
+    content: '🤖';
+    position: absolute;
+    right: 28px; top: 50%; transform: translateY(-50%);
+    font-size: 56px;
+    opacity: 0.12;
+    pointer-events: none;
+    line-height: 1;
+}
+.tbot-header-inner { display: flex; align-items: center; gap: 14px; }
+.tbot-logo-icon {
+    font-size: 26px;
+    width: 48px; height: 48px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px);
+    flex-shrink: 0;
+}
+.tbot-title {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    margin: 0 !important; padding: 0 !important;
+    line-height: 1.2 !important; border: none !important;
+}
+.tbot-subtitle {
+    font-size: 13px !important;
+    color: rgba(255,255,255,0.75) !important;
+    margin: 2px 0 0 !important; padding: 0 !important;
+}
+
+/* ── STAT CARDS ──────────────────────────────────────────────────────────── */
+.tbot-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+}
+.tbot-stat-card {
+    background: var(--tbot-surface);
+    border: 1px solid var(--tbot-border);
+    border-radius: var(--tbot-radius-lg);
+    padding: 18px 20px;
+    display: flex; align-items: center; gap: 14px;
+    box-shadow: var(--tbot-shadow);
+    transition: var(--tbot-transition);
+    position: relative; overflow: hidden;
+}
+.tbot-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+    background: var(--accent-color);
+    border-radius: 4px 0 0 4px;
+}
+.tbot-stat-card:hover { transform: translateY(-2px); box-shadow: var(--tbot-shadow-md); }
+.tbot-stat-icon { font-size: 28px; flex-shrink: 0; }
+.tbot-stat-value {
+    font-size: 26px; font-weight: 700;
+    color: var(--accent-color);
+    line-height: 1;
+}
+.tbot-stat-label { font-size: 11px; color: var(--tbot-muted); margin-top: 3px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; }
+
+/* ── GRID LAYOUTS ────────────────────────────────────────────────────────── */
+.tbot-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.tbot-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+@media (max-width: 1120px) { .tbot-grid-3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 800px)  { .tbot-grid-2, .tbot-grid-3 { grid-template-columns: 1fr; } }
+
+/* ── CARD ────────────────────────────────────────────────────────────────── */
+.tbot-card {
+    background: var(--tbot-surface);
+    border: 1px solid var(--tbot-border);
+    border-radius: var(--tbot-radius-lg);
+    padding: 22px 24px;
+    box-shadow: var(--tbot-shadow);
+}
+.tbot-card-title {
+    font-size: 11px !important; font-weight: 700 !important;
+    color: var(--tbot-muted) !important;
+    margin: 0 0 16px !important; padding: 0 0 14px !important;
+    border: none !important; border-bottom: 1px solid var(--tbot-border) !important;
+    text-transform: uppercase; letter-spacing: 0.6px;
+}
+.tbot-card-toolbar {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+}
+
+/* ── QUICK ACTIONS ───────────────────────────────────────────────────────── */
+.tbot-quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tbot-action-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 13px;
+    background: var(--tbot-surface-2);
+    border: 1px solid var(--tbot-border);
+    border-radius: 8px;
+    color: var(--tbot-text-2) !important;
+    text-decoration: none !important;
+    font-size: 12px; font-weight: 500;
+    transition: var(--tbot-transition);
+}
+.tbot-action-btn:hover {
+    background: var(--tbot-accent-light);
+    border-color: rgba(59,130,246,0.35);
+    color: var(--tbot-accent) !important;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────────────── */
+.tbot-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: var(--tbot-transition);
+    text-decoration: none; border: none; line-height: 1.4;
+    font-family: 'Inter', sans-serif;
+}
+.tbot-btn:focus { outline: 2px solid var(--tbot-accent); outline-offset: 2px; }
+.tbot-btn-primary   { background: var(--tbot-accent);   color: #fff !important; }
+.tbot-btn-primary:hover { background: #2563eb; }
+.tbot-btn-secondary { background: var(--tbot-surface-2); color: var(--tbot-text) !important; border: 1px solid var(--tbot-border); }
+.tbot-btn-secondary:hover { background: var(--tbot-border); }
+.tbot-btn-warning   { background: var(--tbot-warning);  color: #fff !important; }
+.tbot-btn-warning:hover { background: #d97706; }
+.tbot-btn-danger    { background: var(--tbot-danger);   color: #fff !important; }
+.tbot-btn-danger:hover  { background: #dc2626; }
+.tbot-btn-success   { background: var(--tbot-success);  color: #fff !important; }
+.tbot-btn-block     { width: 100%; margin-top: 12px; }
+.tbot-btn-sm        { padding: 5px 11px; font-size: 11px; border-radius: 6px; }
+.tbot-btn:disabled  { opacity: 0.55; cursor: not-allowed; transform: none !important; }
+
+/* ── FORMS ───────────────────────────────────────────────────────────────── */
+.tbot-form-row { margin-bottom: 16px; }
+.tbot-form-row label {
+    display: block; font-size: 11px; font-weight: 700;
+    color: var(--tbot-muted); margin-bottom: 6px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+}
+.tbot-input,
+.tbot-input[type="text"],
+.tbot-input[type="url"],
+.tbot-input[type="number"],
+.tbot-input[type="password"] {
+    width: 100%;
+    background: var(--tbot-surface) !important;
+    border: 1px solid var(--tbot-border-2) !important;
+    border-radius: 8px !important;
+    color: var(--tbot-text) !important;
+    padding: 9px 12px !important;
+    font-size: 13px !important;
+    font-family: 'Inter', sans-serif !important;
+    transition: var(--tbot-transition) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
+    outline: none !important;
+}
+.tbot-input:focus {
+    border-color: var(--tbot-accent) !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12) !important;
+}
+.tbot-input:disabled { background: var(--tbot-surface-2) !important; color: var(--tbot-muted) !important; cursor: not-allowed; }
+select.tbot-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+    padding-right: 32px !important;
+}
+textarea.tbot-input { resize: vertical; min-height: 80px; }
+.tbot-input-prefix { position: relative; display: flex; align-items: center; }
+.tbot-input-prefix > span { position: absolute; left: 12px; color: var(--tbot-muted); font-weight: 600; z-index: 1; }
+.tbot-input-prefix input { padding-left: 28px !important; }
+
+/* ── TABLE ───────────────────────────────────────────────────────────────── */
+.tbot-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbot-table th {
+    text-align: left; padding: 9px 12px;
+    color: var(--tbot-muted); font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    background: var(--tbot-surface-2);
+    border-bottom: 1px solid var(--tbot-border);
+}
+.tbot-table th:first-child { border-radius: 6px 0 0 6px; }
+.tbot-table th:last-child  { border-radius: 0 6px 6px 0; }
+.tbot-table td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--tbot-border);
+    color: var(--tbot-text); vertical-align: middle;
+}
+.tbot-table tr:last-child td { border-bottom: none; }
+.tbot-table tbody tr:hover td { background: #f8fafc; }
+.tbot-table code {
+    background: var(--tbot-surface-2);
+    padding: 2px 7px; border-radius: 4px;
+    font-size: 11px; color: #3b82f6;
+    border: 1px solid var(--tbot-border);
+}
+
+/* ── BADGES ──────────────────────────────────────────────────────────────── */
+.tbot-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 9px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+}
+.tbot-badge-free      { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+.tbot-badge-standard  { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+.tbot-badge-premium   { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
+.tbot-badge-admin     { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.tbot-badge-success   { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.tbot-badge-error     { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.tbot-badge-webhook_in{ background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+.tbot-badge-n8n_out   { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
+.tbot-badge-test      { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+
+/* ── HELPERS ─────────────────────────────────────────────────────────────── */
+.tbot-muted  { color: var(--tbot-muted) !important; }
+.tbot-center { text-align: center; }
+.tbot-link   { font-size: 12px; color: var(--tbot-accent); text-decoration: none; display: inline-block; margin-top: 12px; font-weight: 500; }
+.tbot-link:hover { text-decoration: underline; }
+
+/* ── SPINNER ─────────────────────────────────────────────────────────────── */
+.tbot-spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: tbot-spin 0.6s linear infinite;
+    vertical-align: middle;
+}
+.tbot-spinner-dark {
+    border-color: rgba(59,130,246,0.2);
+    border-top-color: var(--tbot-accent);
+}
+@keyframes tbot-spin { to { transform: rotate(360deg); } }
+
+/* ── PLANS ───────────────────────────────────────────────────────────────── */
+.tbot-plan-card { position: relative; }
+.tbot-plan-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--tbot-border);
+}
+.tbot-plan-header h3 { font-size: 17px !important; font-weight: 700 !important; color: var(--plan-color) !important; margin: 0 !important; border: none !important; }
+.tbot-plan-icon { font-size: 26px; }
+
+/* ── PAYMENT METHODS ─────────────────────────────────────────────────────── */
+.tbot-methods-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 10px; margin-top: 14px; }
+.tbot-method-toggle {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 14px;
+    background: var(--tbot-surface-2);
+    border: 2px solid var(--tbot-border);
+    border-radius: 8px; cursor: pointer;
+    transition: var(--tbot-transition);
+}
+.tbot-method-toggle.active { background: var(--tbot-accent-light); border-color: var(--tbot-accent); }
+.tbot-method-toggle input { margin-top: 3px; accent-color: var(--tbot-accent); cursor: pointer; }
+.tbot-method-info strong { display: block; font-size: 12px; color: var(--tbot-text); font-weight: 600; }
+.tbot-method-info span   { font-size: 11px; color: var(--tbot-muted); margin-top: 2px; display: block; }
+
+/* ── PERSONAS ────────────────────────────────────────────────────────────── */
+.tbot-personas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; }
+.tbot-persona-card  { position: relative; }
+.tbot-persona-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--tbot-border); }
+.tbot-persona-icon-preview { font-size: 22px; }
+
+/* ── DIAGNOSTICS ─────────────────────────────────────────────────────────── */
+.tbot-diag-card { text-align: center; }
+.tbot-diag-card h3 { margin: 8px 0 10px !important; font-size: 14px !important; border: none !important; color: var(--tbot-text) !important; font-weight: 600 !important; }
+.tbot-diag-icon { font-size: 34px; margin-bottom: 4px; }
+.tbot-diag-result {
+    margin-top: 14px; padding: 12px 14px;
+    border-radius: 8px; font-size: 12px; text-align: left;
+    animation: tbot-fade-in 0.3s ease;
+}
+.tbot-diag-success { background: var(--tbot-success-bg); border: 1px solid #bbf7d0; color: #15803d; }
+.tbot-diag-error   { background: var(--tbot-danger-bg);  border: 1px solid #fecaca; color: #b91c1c; }
+.tbot-diag-info    { background: var(--tbot-accent-light); border: 1px solid #bfdbfe; color: #1d4ed8; }
+.tbot-diag-result-row { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 5px; align-items: baseline; }
+.tbot-diag-result-row span:first-child { color: var(--tbot-muted); flex-shrink: 0; font-weight: 500; }
+
+/* ── LOGS ────────────────────────────────────────────────────────────────── */
+.tbot-logs-table { font-size: 12px; }
+.tbot-payload-preview {
+    background: var(--tbot-surface-2);
+    border: 1px solid var(--tbot-border);
+    padding: 8px 10px; border-radius: 6px;
+    font-size: 10px; max-height: 180px; overflow-y: auto;
+    white-space: pre-wrap; word-break: break-all;
+    color: var(--tbot-muted); margin-top: 6px;
+    font-family: 'Courier New', monospace;
+}
+details summary { cursor: pointer; color: var(--tbot-accent); font-size: 11px; font-weight: 500; }
+
+/* ── TOAST NOTIFICATION ──────────────────────────────────────────────────── */
+#tbot-toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: var(--tbot-text); color: #fff;
+    padding: 12px 20px; border-radius: 10px;
+    font-size: 13px; font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    z-index: 99999;
+    display: none; align-items: center; gap: 10px;
+    animation: tbot-slide-up 0.25s ease;
+    max-width: 380px;
+}
+#tbot-toast.tbot-toast-success { background: var(--tbot-success); }
+#tbot-toast.tbot-toast-error   { background: var(--tbot-danger); }
+#tbot-toast.tbot-toast-warning { background: var(--tbot-warning); color: #fff; }
+
+/* ── ANIMATIONS ──────────────────────────────────────────────────────────── */
+@keyframes tbot-fade-in   { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes tbot-slide-up  { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* ── KPI CARDS (Analytics) ───────────────────────────────────────────────── */
+.tbot-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+}
+.tbot-kpi-card {
+    background: var(--tbot-surface);
+    border: 1px solid var(--tbot-border);
+    border-radius: var(--tbot-radius-lg);
+    padding: 20px 18px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 6px;
+    box-shadow: var(--tbot-shadow);
+    text-align: center;
+    transition: var(--tbot-transition);
+}
+.tbot-kpi-card:hover { transform: translateY(-2px); box-shadow: var(--tbot-shadow-md); }
+.tbot-kpi-icon  { font-size: 28px; line-height: 1; }
+.tbot-kpi-value { font-size: 22px; font-weight: 700; color: var(--tbot-text); line-height: 1.1; }
+.tbot-kpi-label { font-size: 11px; font-weight: 600; color: var(--tbot-muted); text-transform: uppercase; letter-spacing: 0.4px; }
+
+/* ── ANALYTICS FILTER ────────────────────────────────────────────────────── */
+.tbot-analytics-filter {
+    display: flex; gap: 8px; align-items: center;
+    padding: 12px 20px !important;
+    margin-bottom: 20px;
+}
+.tbot-analytics-filter .button { min-width: 44px; text-align: center; }
+
+/* ── INLINE STATUS FEEDBACK ──────────────────────────────────────────────── */
+.tbot-status {
+    display: inline-block;
+    font-size: 12px; font-weight: 500;
+    margin-left: 10px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: var(--tbot-success-bg);
+    color: var(--tbot-success);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.tbot-status.visible { opacity: 1; }
+
+/* ── REFERRAL CARD ───────────────────────────────────────────────────────── */
+.tbot-referral-link {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    background: var(--tbot-surface-2);
+    border: 1px solid var(--tbot-border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    word-break: break-all;
+    color: var(--tbot-accent);
+}

@@ -1,0 +1,30 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# WordPress / PHP
+vendor/
+composer.lock
+*.log
+
+# Runtime / cache
+.cache/
+tmp/
+temp/
+
+# Secrets / env
+.env
+.env.*
+*.key
+*.pem
+
+# Build / packages
+node_modules/
+dist/
+build/
+
+# Archives
+*.zip
+*.tar.gz
